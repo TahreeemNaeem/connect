@@ -11,6 +11,7 @@ function cheackbalance(balance,data){
    return "low balance"
   }
 }
+
     function Profile() {
       const { address, isConnected } = useAccount()
       const { connect } = useConnect({
