@@ -23,7 +23,6 @@ function cheackbalance(balance,data){
         chainid:5,
       })
       //const balance= data2?.data.value;
-
      console.log()
      
       const { data, } = useContractReads({
