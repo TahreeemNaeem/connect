@@ -22,9 +22,9 @@ function cheackbalance(balance,data){
         formatUnits: 'gwei',
         chainid:5,
       })
-      const balance= data2?.data.value;
+      //const balance= data2?.data.value;
 
-     console.log(balance)
+     console.log()
      
       const { data, } = useContractReads({
         contracts:[{
@@ -72,7 +72,7 @@ function cheackbalance(balance,data){
         <div>NFT minting fee {mintingfee} ether</div>
        <div>Total nfts minted {nftsminted} /{totalsupply}</div>
        <button onClick={() => write()}> mint</button>
-       <div>{cheackbalance(balance,data[0])}</div>
+       <div>{cheackbalance(0,data[0])}</div>
       </div>
       )
       return <button onClick={() => connect()}>Connect Wallet</button>
