@@ -24,7 +24,7 @@ function cheackbalance(balance,data){
       })
       const balance= data2?.data.value;
 
-     //console.log(balance)
+     console.log(balance)
      
       const { data, } = useContractReads({
         contracts:[{
