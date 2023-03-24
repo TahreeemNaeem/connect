@@ -22,9 +22,7 @@ function cheackbalance(balance,data){
         formatUnits: 'gwei',
         chainid:5,
       })
-      //const balance= data2?.data.value;
-     console.log()
-     
+    const balance= data2?.data.value;
       const { data, } = useContractReads({
         contracts:[{
           address: '0x2fd1E0aBBb24d81d7E042EEAFd696f42a313A19e',
@@ -51,7 +49,7 @@ function cheackbalance(balance,data){
       const nftsminted =data[1].toNumber();
       const totalsupply =data[2].toNumber();
       //console.log(mintingfee+nftsminted+totalsupply)
-      const [state, setstate] = useState('');
+  
     
        const {data1, isLoading, isSuccess, write} = useContractWrite({
         address: '0x2fd1E0aBBb24d81d7E042EEAFd696f42a313A19e',
@@ -71,7 +69,7 @@ function cheackbalance(balance,data){
         <div>NFT minting fee {mintingfee} ether</div>
        <div>Total nfts minted {nftsminted} /{totalsupply}</div>
        <button onClick={() => write()}> mint</button>
-       <div>{cheackbalance(0,data[0])}</div>
+       <div>{cheackbalance(balance,data[0])}</div>
       </div>
       )
       return <button onClick={() => connect()}>Connect Wallet</button>
