@@ -1,22 +1,24 @@
 import './App.css';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useAccount,} from 'wagmi';
+import Mint from './components/mint';
+import Connect from './components/connect';
 
-    function Profile() {
-      const { address, isConnected } = useAccount()
-      const { connect } = useConnect({
-      connector: new InjectedConnector(),
-      })
-      const { disconnect } = useDisconnect()
-     
-      if (isConnected)
-      return (
-      <div>
-      Connected to
-       <div>{address}</div>
+
+function App() {
+
+  const { isConnected } = useAccount()
+  
+  return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}>
+      {
+        isConnected?<Mint/>:<Connect/>
+      }
       </div>
-      )
-      return <button onClick={() => connect()}>Connect Wallet</button>
-     }
-
-export default Profile;
+    );
+}
+export default App;

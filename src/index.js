@@ -2,15 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Profile from './App';
+import { createClient, configureChains, goerli } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
 //import reportWebVitals from './reportWebVitals';
-import { WagmiConfig, createClient } from 'wagmi'
-import { getDefaultProvider } from 'ethers'
+import { WagmiConfig } from 'wagmi'
 
+const { provider, webSocketProvider } = configureChains(
+  [goerli],
+  [publicProvider()],
+)
 const client = createClient({
- autoConnect: true,
- provider: getDefaultProvider(),
+  autoConnect: true,
+  provider,
+  webSocketProvider,
 })
-
 function App() {
  return (
  <WagmiConfig client={client}>
