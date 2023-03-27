@@ -1,8 +1,8 @@
 import './App.css';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import Mint from './components/Mint';
-import Connect from './components/Connect';
+import Mint from './components/mint';
+import Connect from './components/connect';
 
 
 function App() {
