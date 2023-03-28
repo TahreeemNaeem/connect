@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 
 export default  function ContractInteraction() {
     const [isConnected, setIsConnected] = useState(false);
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState(null);
     const [balance, setBlance] = useState('');
     const [mintingfee, setMintingfee] = useState('');
     const [totalsupply, settotalsupply] = useState('');
@@ -33,17 +33,7 @@ const connectWallet = () => {
     
     useEffect(() => {
     
-       const  checkConnection = async () => {
-            const signer = provider.getSigner();
-            if (signer._address!==null) {
-                console.log(signer)
-              setIsConnected(true);
-            } else {
-              setIsConnected(false);
-              console.log(signer)
-            }
-          };
-        checkConnection();
+
         addressPromise.then((resolvedAddress) => {
           setAddress(resolvedAddress.toString());
         });
@@ -59,7 +49,16 @@ const connectWallet = () => {
           totalsupplypromise.then((resolvedtotalsupply) => {
             settotalsupply(resolvedtotalsupply.toNumber());
           }); 
-          
+          const  checkConnection = async () => {
+            const signer = provider.getSigner();
+            if (await signer.getAddress()!==null) {
+              setIsConnected(true);
+            } else {
+              setIsConnected(false);
+              console.log(signer)
+            }
+          };
+        checkConnection();
         }
 , []);
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
