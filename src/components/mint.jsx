@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react'
 import ABI from '../Assets/abi.json'
 import { useAccount, useBalance, useContractReads, useContractWrite, useDisconnect } from 'wagmi'
 
+
+
 export default function Mint() {
 
     const { address } = useAccount()
     const { disconnect } = useDisconnect()
     const [canMint,setCanMint] = useState(false)
+
 
     var balance1 = useBalance({
         address,
