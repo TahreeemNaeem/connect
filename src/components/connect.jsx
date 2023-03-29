@@ -11,14 +11,32 @@ export default function Connect() {
           console.log('Please connect to MetaMask.');
         }
       });
+      if(addresses.length!=0){
       setMyBooleanVariable(true);
       console.log(myBooleanVariable);
+      }
     } else {
       console.log('Please Install Metamask!!!');
     }
   };
 
-  return <button onClick={() => connectWallet()}>Connect Wallet</button>;
+  return <div style={{
+    display: 'flow',
+    textAlign: 'center', 
+    fontSize: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    marginTop:'30vh'
+  }}>
+    <h3>Connect Your Metamask Wallet</h3>  
+  <button style={{
+           height: '4vh',
+           width:'15vh',
+           borderLeft:'12vh',
+           border:'1vh'
+    }} onClick={() => connectWallet()}>Connect Wallet</button>
+  </div> 
 }
 
 
