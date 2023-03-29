@@ -1,19 +1,33 @@
 import './App.css';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import Mint from './components/mint';
+import React, { useState, useEffect } from 'react';
 import ContractInteraction from './components/contractInteraction';
-
+import Connect  from './components/connect';
+import { ethers } from 'ethers'
 
 function App() {
+  const [isConnected, setIsConnected] = useState(false);
+  
+  const provider= (new ethers.providers.Web3Provider(window.ethereum));
 
-  const { isConnected } = useAccount()
+  useEffect(() => {
+      const  checkConnection = async () => {
+        const signer = await provider.getSigner();
+        if (await signer.getAddress()!==null) {
+          setIsConnected(true);
+        } else {
+          setIsConnected(false);
+        }
+      };
+    checkConnection();
+    }
+        
+, []);
   return (
-      <>
+      <div>
       {
-        <ContractInteraction/>
+        isConnected?<ContractInteraction/>:<Connect/> 
       }
-      </>
+      </div>
     );
       
     }
