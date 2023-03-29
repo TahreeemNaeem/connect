@@ -66,7 +66,6 @@ export default  function ContractInteraction() {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
-        marginTop:'60vh'
       }}>
         <h3> Connected to</h3>
         <div>{address}</div>
