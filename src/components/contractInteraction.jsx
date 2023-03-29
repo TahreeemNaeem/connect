@@ -50,13 +50,16 @@ export default  function ContractInteraction() {
           totalsupplypromise.then((resolvedtotalsupply) => {
             settotalsupply(resolvedtotalsupply.toNumber());
           }); 
-          setCanMint(balance>mintingfee)
         }
   ,);
     
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
-    const mint = async()=> {await NFT.mint(addressPromise,overrides)}
-
+    const mint = async () => {
+      const transaction = await NFT.mint(addressPromise, overrides);
+      await transaction.wait();
+      setnftsminted((await NFT.totalNFTsMinted()).toNumber())
+    };
+  
     return( 
        <div style={{
         display: 'flow',
@@ -72,7 +75,7 @@ export default  function ContractInteraction() {
         <div>{address}</div>
         <div>NFT minting fee : {mintingfee} ether</div>
         <div>Total nfts minted : {nftsminted} /{totalsupply}</div>
-        {canMint?
+        {(balance>mintingfee)?
         <button style={{
            height: '4vh',
            width:'15vh',

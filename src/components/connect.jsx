@@ -11,7 +11,7 @@ export default function Connect() {
           console.log('Please connect to MetaMask.');
         }
       });
-      if(addresses.length!=0){
+      if(addresses.length!==0){
       setMyBooleanVariable(true);
       console.log(myBooleanVariable);
       }
