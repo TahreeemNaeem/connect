@@ -26,16 +26,9 @@ function App() {
   }, []);
 
   return (
-    <div  style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-    }}>
     <MyContext.Provider value={{ myBooleanVariable,setMyBooleanVariable }} >
       {myBooleanVariable ? <ContractInteraction /> : <Connect />}
     </MyContext.Provider>
-    </div>
   );
 }
 
