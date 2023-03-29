@@ -2,7 +2,6 @@ import { ethers } from 'ethers'
 import ABI from '../Assets/abi.json'
 import { MyContext } from '../App';
 import React, { useState, useEffect,useContext } from 'react';
-import { disconnect } from 'process';
 
 
 
@@ -65,7 +64,6 @@ export default  function ContractInteraction() {
         <div>NFT minting fee {mintingfee} ether</div>
         <div>Total nfts minted {nftsminted} /{totalsupply}</div>
         {canMint?<button onClick={() => mint()}> mint</button>:<h1>Balance Low</h1>}
-       
         </div>
     );
 
