@@ -12,7 +12,7 @@ function App() {
   const [ myBooleanVariable,setMyBooleanVariable ] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  
+
   useEffect(() => {
     const checkConnection = async () => {
       const signer = await provider.getSigner();
@@ -26,9 +26,16 @@ function App() {
   }, []);
 
   return (
-    <MyContext.Provider value={{ myBooleanVariable,setMyBooleanVariable }}>
+    <div  style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+    }}>
+    <MyContext.Provider value={{ myBooleanVariable,setMyBooleanVariable }} >
       {myBooleanVariable ? <ContractInteraction /> : <Connect />}
     </MyContext.Provider>
+    </div>
   );
 }
 

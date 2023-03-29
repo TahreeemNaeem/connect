@@ -7,7 +7,7 @@ import React, { useState, useEffect,useContext } from 'react';
 
 export default  function ContractInteraction() {
   
-  const {setMyBooleanVariable } = useContext(MyContext);
+    const {setMyBooleanVariable } = useContext(MyContext);
     const [address, setAddress] = useState(null);
     const [balance, setBlance] = useState('');
     const [mintingfee, setMintingfee] = useState('');
@@ -58,12 +58,27 @@ export default  function ContractInteraction() {
     const mint = async()=> {await NFT.mint(addressPromise,overrides)}
 
     return( 
-       <div>
-        Connected to
+       <div style={{
+        display: 'flow',
+        textAlign: 'center', 
+        fontWeight: 'italic',
+        fontSize: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        marginTop:'60vh'
+      }}>
+        <h3> Connected to</h3>
         <div>{address}</div>
-        <div>NFT minting fee {mintingfee} ether</div>
-        <div>Total nfts minted {nftsminted} /{totalsupply}</div>
-        {canMint?<button onClick={() => mint()}> mint</button>:<h1>Balance Low</h1>}
+        <div>NFT minting fee : {mintingfee} ether</div>
+        <div>Total nfts minted : {nftsminted} /{totalsupply}</div>
+        {canMint?
+        <button style={{
+           height: '4vh',
+           width:'15vh',
+           borderLeft:'12vh',
+           border:'1vh'
+    }} onClick={() => mint()}> mint</button>:<h1>Balance Low</h1>}
         </div>
     );
 
