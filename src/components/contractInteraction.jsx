@@ -1,12 +1,12 @@
 import { ethers } from 'ethers'
 import ABI from '../Assets/abi.json'
-import { MyContext } from '../App';
+import { MyContext } from './MyContext';
 import React, { useState, useEffect,useContext } from 'react';
 
 
 
 export default  function ContractInteraction() {
-  
+  const [transactioninfo, settransactioninfo] = useState('');
     const {setMyBooleanVariable } = useContext(MyContext);
     const [address, setAddress] = useState(null);
     const [balance, setBlance] = useState('');
@@ -55,34 +55,82 @@ export default  function ContractInteraction() {
     
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
-      const transaction = await NFT.mint(addressPromise, overrides);
-      await transaction.wait();
-      setnftsminted((await NFT.totalNFTsMinted()).toNumber())
+      try {
+        const transaction = await NFT.mint(addressPromise, overrides);
+        await transaction.wait();
+        setnftsminted((await NFT.totalNFTsMinted()).toNumber());
+        settransactioninfo('Successfully Minted');
+      } catch (error) {
+        console.error(error);
+        if (error.code === 'ACTION_REJECTED') {
+          settransactioninfo('User Denied Transaction');
+        }
+        else {
+          settransactioninfo(`Error: ${error.message}`);
+        }
+      }
     };
   
     return( 
-       <div style={{
-        display: 'flow',
-        textAlign: 'center', 
-        fontWeight: 'italic',
-        fontSize: 18,
-        alignItems: 'center',
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        height: '100vh',
-        marginTop:'30vh'
-      }}>
-        <h3> Connected to</h3>
-        <div>{address}</div>
-        <div>NFT minting fee : {mintingfee} ether</div>
-        <div>Total nfts minted : {nftsminted} /{totalsupply}</div>
-        {(balance>mintingfee)?
-        <button style={{
-           height: '4vh',
-           width:'15vh',
-           borderLeft:'12vh',
-           border:'1vh'
-    }} onClick={() => mint()}> mint</button>:<h1>Balance Low</h1>}
-        </div>
+        alignItems: 'center',
+        textAlign: 'center',
+        height: '50vh',
+        width: '80vh',
+        border: '4px solid #ccc',
+        borderRadius: '10px',
+        marginLeft:'60vh',
+        marginTop:'20vh',
+        }}>
+       <h2 style={{ 
+        fontSize: '24px',
+        fontWeight: 'bold',
+        marginBottom: '3vh',
+    }}>  MINT NFT </h2>
+    <div style={{ 
+        fontSize: '16px',
+        marginBottom: '2vh',
+        color:'initial'
+    }}> Connected to {address} </div>
+    <div style={{ 
+        fontSize: '24px',
+        marginBottom: '2vh',
+    }}> Total NFTs minted: {nftsminted} / {totalsupply} </div>
+    <div style={{ 
+        fontSize: '18px',
+       
+    }}> Minting fee: {mintingfee} ether </div>
+    {(balance > mintingfee) ?
+        <div>
+            <p style={{ 
+                fontSize: '20px',
+                marginBottom: '2vh',
+                color:'Highlight'
+            }}> To mint an NFT, click the button below. </p>
+            <button style={{
+                height: '40px',
+                width: '150px',
+                backgroundColor: 'black',
+                color: 'white',
+                fontSize: '20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+            }} onClick={() => mint()}> Mint NFT </button>
+        </div> :
+        <h3 style={{ 
+            fontSize: '24px',
+            color: 'red',
+            marginTop: '3vh',
+        }}> Insufficient Balance </h3>}
+        <div style={{ 
+            fontSize: '16px',
+            color: 'red',
+        }}> {transactioninfo}</div>
+</div>
     );
 
 }

@@ -1,41 +1,56 @@
-import React, { useContext } from 'react';
-import { MyContext } from '../App';
+import React, { useContext, useState } from 'react';
+import { MyContext } from './MyContext';
 
 export default function Connect() {
   const { myBooleanVariable,setMyBooleanVariable } = useContext(MyContext);
-
+  const [connectioninfo,setconnectioninfo] = useState('')
   const connectWallet = async () => {
-    if (window.ethereum !== 'undefined') {
+    if (window.ethereum) {
       const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((error) => {
         if (error.code === 4001) {
-          console.log('Please connect to MetaMask.');
+          setconnectioninfo('Please connect to MetaMask. User rejected Connection');
+        }
+        else{
+          setconnectioninfo(`Error: ${error.message}`);
         }
       });
       if(addresses.length!==0){
       setMyBooleanVariable(true);
-      console.log(myBooleanVariable);
       }
     } else {
-      console.log('Please Install Metamask!!!');
+      setconnectioninfo('Please Install Metamask!!!');
     }
   };
 
-  return <div style={{
-    display: 'flow',
-    textAlign: 'center', 
-    fontSize: 18,
-    alignItems: 'center',
+  return <div  style={{
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
-    height: '100vh',
-    marginTop:'30vh'
-  }}>
-    <h3>Connect Your Metamask Wallet</h3>  
+    alignItems: 'center',
+    textAlign: 'center',
+    height: '50vh',
+    width: '80vh',
+    border: '4px solid #ccc',
+    borderRadius: '10px',
+    marginLeft:'60vh',
+    marginTop:'20vh',
+    }}>
+    <h3 style={{ 
+        fontSize: '24px',
+        fontWeight: 'bold',
+        marginBottom: '3vh',
+    }}>Connect Your Metamask Wallet to mint</h3>  
   <button style={{
-           height: '4vh',
-           width:'15vh',
+     fontSize: '18px',
+           height: '6vh',
+           width:'30vh',
            borderLeft:'12vh',
            border:'1vh'
     }} onClick={() => connectWallet()}>Connect Wallet</button>
+     <div style={{ 
+            fontSize: '16px',
+            color: 'red',
+        }}> {connectioninfo}</div>
   </div> 
 }
 
