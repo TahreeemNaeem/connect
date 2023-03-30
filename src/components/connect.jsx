@@ -1,17 +1,35 @@
+import { ethers } from 'ethers';
 import React, { useContext, useState } from 'react';
 import { MyContext } from './MyContext';
 
+
 export default function Connect() {
-  const { myBooleanVariable,setMyBooleanVariable } = useContext(MyContext);
+  const {setMyBooleanVariable } = useContext(MyContext);
   const [connectioninfo,setconnectioninfo] = useState('')
+  const [connect,setconnect] = useState('Connect Wallet')
+
   const connectWallet = async () => {
+    const provider= (new ethers.providers.Web3Provider(window.ethereum));
     if (window.ethereum) {
-      const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch((error) => {
+      setconnect('Connecting')
+      const network = await provider.getNetwork()
+      if (network.chainId !== 5) {
+        const confirmed = window.confirm('Do you want to switch to the Goerli test network?');
+        if (confirmed) {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x5' }], // Goerli chain ID
+          });
+        }
+      }
+      const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch(async (error) => {
         if (error.code === 4001) {
           setconnectioninfo('Please connect to MetaMask. User rejected Connection');
+          setconnect('Connect Wallet')
         }
         else{
           setconnectioninfo(`Error: ${error.message}`);
+          setconnect('Connect Wallet')
         }
       });
       if(addresses.length!==0){
@@ -19,6 +37,7 @@ export default function Connect() {
       }
     } else {
       setconnectioninfo('Please Install Metamask!!!');
+      setconnect('Connect Wallet')
     }
   };
 
@@ -34,6 +53,7 @@ export default function Connect() {
     borderRadius: '10px',
     marginLeft:'60vh',
     marginTop:'20vh',
+    
     }}>
     <h3 style={{ 
         fontSize: '24px',
@@ -46,7 +66,7 @@ export default function Connect() {
            width:'30vh',
            borderLeft:'12vh',
            border:'1vh'
-    }} onClick={() => connectWallet()}>Connect Wallet</button>
+    }} onClick={() => connectWallet()}>{connect}</button>
      <div style={{ 
             fontSize: '16px',
             color: 'red',

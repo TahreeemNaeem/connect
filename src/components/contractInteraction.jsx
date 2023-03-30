@@ -6,14 +6,17 @@ import React, { useState, useEffect,useContext } from 'react';
 
 
 export default  function ContractInteraction() {
-  const [transactioninfo, settransactioninfo] = useState('');
+
+    const [transactioninfo, settransactioninfo] = useState('');
     const {setMyBooleanVariable } = useContext(MyContext);
     const [address, setAddress] = useState(null);
+    const [display, setDisplay] = useState(true);
     const [balance, setBlance] = useState('');
     const [mintingfee, setMintingfee] = useState('');
     const [totalsupply, settotalsupply] = useState('');
     const [nftsminted, setnftsminted] = useState('');
-    const [canMint,setCanMint] = useState(false)
+    const [canmintnft,setCanMint] = useState(true)
+    const [mintnft,setmintnft] = useState('Mint NFT')
     const provider= (new ethers.providers.Web3Provider(window.ethereum));
     const signer = provider.getSigner()
 
@@ -25,16 +28,40 @@ export default  function ContractInteraction() {
     const nftsmintedpromise =  NFT.totalNFTsMinted();
     const totalsupplypromise =  NFT.totalSupply();
     
+    
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);
-    function handleAccountsChanged(accounts) {
+    function  handleAccountsChanged(accounts) {
       if(accounts.length===0)
       setMyBooleanVariable(false)
+      else{
+        signer.getAddress().then((resolvedAddress) => {
+          setAddress(resolvedAddress.toString());
+        });
+      }
     }
-
+    window.ethereum.on('chainChanged', async (chainId) => {
+      console.log(chainId)
+     if(chainId==='0x5'){
+        setDisplay(true)
+      }
+    else setDisplay(false)})
+    
+    const changechainid = (async ()=>{
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x5' }], // Goerli chain ID
+        });
+    })
 
     useEffect(() => {
-
+        provider.getNetwork().then((network) => {
+        if(network.chainId===5)
+        setDisplay(true);
+        else
+        setDisplay(false);
+      });
+      
         addressPromise.then((resolvedAddress) => {
           setAddress(resolvedAddress.toString());
         });
@@ -55,18 +82,27 @@ export default  function ContractInteraction() {
     
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
+      setCanMint(false)
+      setmintnft('Minting')
       try {
+        
         const transaction = await NFT.mint(addressPromise, overrides);
         await transaction.wait();
         setnftsminted((await NFT.totalNFTsMinted()).toNumber());
         settransactioninfo('Successfully Minted');
+        setmintnft('Mint NFT')
+        setCanMint(true)
       } catch (error) {
         console.error(error);
         if (error.code === 'ACTION_REJECTED') {
           settransactioninfo('User Denied Transaction');
+          setmintnft('Mint NFT');
+          setCanMint(true)
         }
         else {
           settransactioninfo(`Error: ${error.message}`);
+          setmintnft('Mint NFT')
+          setCanMint(true)
         }
       }
     };
@@ -90,6 +126,8 @@ export default  function ContractInteraction() {
         fontWeight: 'bold',
         marginBottom: '3vh',
     }}>  MINT NFT </h2>
+    {display?
+    <div>
     <div style={{ 
         fontSize: '16px',
         marginBottom: '2vh',
@@ -119,7 +157,7 @@ export default  function ContractInteraction() {
                 border: 'none',
                 borderRadius: '5px',
                 cursor: 'pointer'
-            }} onClick={() => mint()}> Mint NFT </button>
+            }} onClick={() => mint()} disabled={!canmintnft}> {mintnft} </button>
         </div> :
         <h3 style={{ 
             fontSize: '24px',
@@ -130,6 +168,19 @@ export default  function ContractInteraction() {
             fontSize: '16px',
             color: 'red',
         }}> {transactioninfo}</div>
+        </div>:
+        <div>  <button style={{
+                height: '40px',
+                width: '150px',
+                backgroundColor: 'black',
+                color: 'white',
+                fontSize: '20px',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+            }} onClick={() => changechainid()}> Change Network </button></div>
+          }
+
 </div>
     );
 
