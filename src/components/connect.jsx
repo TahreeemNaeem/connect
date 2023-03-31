@@ -13,29 +13,30 @@ export default function Connect() {
     if (window.ethereum) {
       setconnect('Connecting')
       const network = await provider.getNetwork()
+      try {
       if (network.chainId !== 5) {
-        const confirmed = window.confirm('Do you want to switch to the Goerli test network?');
-        if (confirmed) {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x5' }], // Goerli chain ID
           });
-        }
       }
-      const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' }).catch(async (error) => {
-        if (error.code === 4001) {
-          setconnectioninfo('Please connect to MetaMask. User rejected Connection');
-          setconnect('Connect Wallet')
-        }
-        else{
-          setconnectioninfo(`Error: ${error.message}`);
-          setconnect('Connect Wallet')
-        }
-      });
+      const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' })
       if(addresses.length!==0){
-      setMyBooleanVariable(true);
+        setMyBooleanVariable(true);
+        }
+    }
+    catch(error)  {
+      if (error.code === 4001) {
+        setconnectioninfo('Please connect to MetaMask. User rejected Connection');
+        setconnect('Connect Wallet')
       }
-    } else {
+      else{
+        setconnectioninfo(`Error: ${error.message}`);
+        setconnect('Connect Wallet')
+      }
+     }
+    }
+    else {
       setconnectioninfo('Please Install Metamask!!!');
       setconnect('Connect Wallet')
     }
@@ -65,7 +66,9 @@ export default function Connect() {
            height: '6vh',
            width:'30vh',
            borderLeft:'12vh',
-           border:'1vh'
+           border:'1vh',
+           color:'white',
+           backgroundColor:'black'
     }} onClick={() => connectWallet()}>{connect}</button>
      <div style={{ 
             fontSize: '16px',
