@@ -84,72 +84,76 @@ export default  function ContractInteraction() {
         }
       }
     };
-  
-    return( 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        border: '4px solid #ccc',
-        borderRadius: '10px',
-        maxWidth: '90vw',
-        maxHeight: '90vh',
-        width: 'auto',
-        height: 'auto',
-        padding: '2rem',
-      }}>
-        <h2 style={{ 
+  return(
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      border: '2px solid #1F2937',
+      borderRadius: '10px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      width: 'auto',
+      height: 'auto',
+      padding: '2rem',
+      backgroundColor: '#F9FAFB',
+    }}>
+      <h2 style={{ 
+        fontSize: '24px',
+        fontWeight: 'bold',
+        marginBottom: '2vh',
+        color: '#1F2937',
+      }}>MINT NFT</h2>
+      <div style={{ 
+        fontSize: '16px',
+        marginBottom: '1vh',
+        color: '#4B5563',
+      }}>Connected to {address}</div>
+      <div style={{ 
+        fontSize: '20px',
+        marginBottom: '2vh',
+        color: '#1F2937',
+      }}>Total NFTs minted: {nftsminted} / {totalsupply}</div>
+      <div style={{ 
+        fontSize: '18px',
+        marginBottom: '2vh',
+        color: '#4B5563',
+      }}>Minting fee: {mintingfee} ether</div>
+      {(balance > mintingfee) ?
+        <div>
+          <p style={{ 
+            fontSize: '20px',
+            marginBottom: '1vh',
+            color: '#1F2937',
+          }}>To mint an NFT, click the button below.</p>
+          <button style={{
+            height: '40px',
+            width: '150px',
+            backgroundColor: '#4A4A4A',
+            color: 'white',
+            fontSize: '20px',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'block',
+            margin: '0 auto',
+            borderRadius: '10px',
+          }} onClick={() => mint()} disabled={!canmintnft}>{mintnft}</button>
+        </div> :
+        <h3 style={{ 
           fontSize: '24px',
-          fontWeight: 'bold',
-          marginBottom: '3vh',
-        }}>MINT NFT</h2>
-        <div style={{ 
-          fontSize: '16px',
-          marginBottom: '2vh',
-          color: 'initial',
-        }}>Connected to {address}</div>
-        <div style={{ 
-          fontSize: '24px',
-          marginBottom: '2vh',
-        }}>Total NFTs minted: {nftsminted} / {totalsupply}</div>
-        <div style={{ 
-          fontSize: '18px',
-        }}>Minting fee: {mintingfee} ether</div>
-        {(balance > mintingfee) ?
-          <div>
-            <p style={{ 
-              fontSize: '20px',
-              marginBottom: '2vh',
-              color: 'Highlight',
-            }}>To mint an NFT, click the button below.</p>
-            <button style={{
-              height: '40px',
-              width: '150px',
-              backgroundColor: 'black',
-              color: 'white',
-              fontSize: '20px',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'block',
-              margin: '0 auto'
-            }} onClick={() => mint()} disabled={!canmintnft}>{mintnft}</button>
-          </div> :
-          <h3 style={{ 
-            fontSize: '24px',
-            color: 'red',
-            marginTop: '3vh',
-          }}>Insufficient Balance</h3>}
-        <div style={{ 
-          fontSize: '16px',
-          color: 'red',
-        }}>{transactioninfo}</div>
-      </div>
-    
-    );
+          color: '#EF4444',
+          marginTop: '2vh',
+        }}>Insufficient Balance</h3>}
+      <div style={{ 
+        fontSize: '16px',
+        color: '#EF4444',
+      }}>{transactioninfo}</div>
+    </div>
+  );
 
 }
