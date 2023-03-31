@@ -12,7 +12,7 @@ function App() {
   const [ myBooleanVariable,setMyBooleanVariable ] = useState(false);
 
   window.ethereum.on('disconnect', (error) => {
-    console.log('diconnect',error)
+    setMyBooleanVariable(false);
  });
 
   window.ethereum.on('chainChanged', async (chainId) => {
