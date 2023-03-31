@@ -42,33 +42,41 @@ export default function Connect() {
     }
   };
 
-  return <div  style={{
+  return <div   style={{
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
-    height: '50vh',
-    width: '80vh',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     border: '4px solid #ccc',
     borderRadius: '10px',
-    marginLeft:'60vh',
-    marginTop:'20vh',
-    
-    }}>
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    width: 'auto',
+    height: 'auto',
+    padding: '2rem',
+  }}>
+    <h2 style={{fontSize: '24px',
+          fontWeight: 'bold',
+          marginBottom: '3vh'}}>Mint NFT</h2>
     <h3 style={{ 
         fontSize: '24px',
         fontWeight: 'bold',
         marginBottom: '3vh',
-    }}>Connect Your Metamask Wallet to mint</h3>  
+    }}>Connect Your Metamask Wallet To Mint</h3>  
   <button style={{
-     fontSize: '18px',
-           height: '6vh',
-           width:'30vh',
-           borderLeft:'12vh',
-           border:'1vh',
-           color:'white',
-           backgroundColor:'black'
+      height: '40px',
+      width: '150px',
+      backgroundColor: 'black',
+      color: 'white',
+      fontSize: '20px',
+      border: 'none',
+      cursor: 'pointer',
+      display: 'block',
+      margin: '0 auto'
     }} onClick={() => connectWallet()}>{connect}</button>
      <div style={{ 
             fontSize: '16px',

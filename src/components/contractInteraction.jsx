@@ -87,78 +87,69 @@ export default  function ContractInteraction() {
   
     return( 
       <div style={{
-        display: '-webkit-flex',
-        display: '-ms-flexbox',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
         border: '4px solid #ccc',
         borderRadius: '10px',
-        marginLeft:'20vh',
-        marginRight:'20vh',
-        marginTop:'20vh',
-        maxWidth:'70vh',
-        maxHeight:'60vh',
-        minWidth:'50vh',
-        minHeight:'40vh',
-                top: '30%',
-                bottom: '30%',
-                left: '30%',
-                right: '30%',
-
-        transform: 'translate(-50%, -50%)',
-        position: 'fixed',
-        width: 'window.innerWidth',
-        height: 'window.innerHeight',
-        }}>
-       <h2 style={{ 
-        fontSize: '24px',
-        fontWeight: 'bold',
-        marginBottom: '3vh',
-    }}>  MINT NFT </h2>
-    <div style={{ 
-        fontSize: '16px',
-        marginBottom: '2vh',
-        color:'initial'
-    }}> Connected to {address} </div>
-    <div style={{ 
-        fontSize: '24px',
-        marginBottom: '2vh',
-    }}> Total NFTs minted: {nftsminted} / {totalsupply} </div>
-    <div style={{ 
-        fontSize: '18px',
-       
-    }}> Minting fee: {mintingfee} ether </div>
-    {(balance > mintingfee) ?
-        <div>
+        maxWidth: '90vw',
+        maxHeight: '90vh',
+        width: 'auto',
+        height: 'auto',
+        padding: '2rem',
+      }}>
+        <h2 style={{ 
+          fontSize: '24px',
+          fontWeight: 'bold',
+          marginBottom: '3vh',
+        }}>MINT NFT</h2>
+        <div style={{ 
+          fontSize: '16px',
+          marginBottom: '2vh',
+          color: 'initial',
+        }}>Connected to {address}</div>
+        <div style={{ 
+          fontSize: '24px',
+          marginBottom: '2vh',
+        }}>Total NFTs minted: {nftsminted} / {totalsupply}</div>
+        <div style={{ 
+          fontSize: '18px',
+        }}>Minting fee: {mintingfee} ether</div>
+        {(balance > mintingfee) ?
+          <div>
             <p style={{ 
-                fontSize: '20px',
-                marginBottom: '2vh',
-                color:'Highlight'
-            }}> To mint an NFT, click the button below. </p>
+              fontSize: '20px',
+              marginBottom: '2vh',
+              color: 'Highlight',
+            }}>To mint an NFT, click the button below.</p>
             <button style={{
-                height: '40px',
-                width: '150px',
-                backgroundColor: 'black',
-                color: 'white',
-                fontSize: '20px',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-            }} onClick={() => mint()} disabled={!canmintnft}> {mintnft} </button>
-        </div> :
-        <h3 style={{ 
+              height: '40px',
+              width: '150px',
+              backgroundColor: 'black',
+              color: 'white',
+              fontSize: '20px',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'block',
+              margin: '0 auto'
+            }} onClick={() => mint()} disabled={!canmintnft}>{mintnft}</button>
+          </div> :
+          <h3 style={{ 
             fontSize: '24px',
             color: 'red',
             marginTop: '3vh',
-        }}> Insufficient Balance </h3>}
+          }}>Insufficient Balance</h3>}
         <div style={{ 
-            fontSize: '16px',
-            color: 'red',
-        }}> {transactioninfo}</div>
-        </div>
+          fontSize: '16px',
+          color: 'red',
+        }}>{transactioninfo}</div>
+      </div>
+    
     );
 
 }

@@ -26,19 +26,23 @@ export default function Changechainid() {
       }
 
     return(
-        <div style={{
+        <div  style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            textAlign: 'center',
-            height: '50vh',
-            width: '80vh',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
             border: '4px solid #ccc',
             borderRadius: '10px',
-            marginLeft:'60vh',
-            marginTop:'20vh',
-            }}> 
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            width: 'auto',
+            height: 'auto',
+            padding: '2rem',
+          }}> 
              <h2 style={{ 
         fontSize: '24px',
         fontWeight: 'bold',
@@ -51,6 +55,8 @@ export default function Changechainid() {
             color: 'white',
             fontSize: '20px',
             border: 'none',
+            height: '6vh',
+            width:'30vh',
             borderRadius: '5px',
             cursor: 'pointer'
         }} onClick={() => changechainid()}> Change Network </button>
