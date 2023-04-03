@@ -16,7 +16,7 @@ export default  function ContractInteraction() {
     const [nftsminted, setnftsminted] = useState('');
     const [canmintnft,setCanMint] = useState(true)
     const [mintnft,setmintnft] = useState('Mint NFT')
-
+    const [image,setImage]= useState('')
     const provider= (new ethers.providers.Web3Provider(window.ethereum));
     const signer = provider.getSigner()
 
@@ -39,6 +39,7 @@ export default  function ContractInteraction() {
         const mintingfeepromise =  NFT.getMintingFee();
         const nftsmintedpromise =  NFT.totalNFTsMinted();
         const totalsupplypromise = NFT.totalSupply();
+        
 
         addressPromise.then((resolvedAddress) => {
             setAddress(resolvedAddress.toString());
@@ -55,18 +56,38 @@ export default  function ContractInteraction() {
         totalsupplypromise.then((resolvedtotalsupply) => {
             settotalsupply(resolvedtotalsupply.toNumber());
         }); 
+         },);
 
-  },);
-    
+
+    async function  getImage(id) {
+      const URI =  await NFT.tokenURI(id);
+      const url= (URI+'.json');
+      console.log(url)
+      fetch(url)
+      .then(res => res.json())
+         .then(metadata =>{
+              setImage(metadata.image);
+              console.log(metadata.image)})
+           .catch(err => { throw err });
+          
+        }
+
+      
+  
+   
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
       setCanMint(false)
       setmintnft('Minting')
+      await getImage((await NFT.totalNFTsMinted()).toNumber())
       try {
         
         const transaction = await NFT.mint( signer.getAddress(), overrides);
+      
         await transaction.wait();
+        await getImage((await NFT.totalNFTsMinted()).toNumber())
         setnftsminted((await NFT.totalNFTsMinted()).toNumber());
+       
         settransactioninfo('Successfully Minted');
         setmintnft('Mint NFT')
         setCanMint(true)
@@ -84,76 +105,136 @@ export default  function ContractInteraction() {
         }
       }
     };
-  return(
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      border: '2px solid #1F2937',
-      borderRadius: '10px',
-      maxWidth: '90vw',
-      maxHeight: '90vh',
-      width: 'auto',
-      height: 'auto',
-      padding: '2rem',
-      backgroundColor: '#F9FAFB',
-    }}>
-      <h2 style={{ 
-        fontSize: '24px',
-        fontWeight: 'bold',
-        marginBottom: '2vh',
-        color: '#1F2937',
-      }}>MINT NFT</h2>
-      <div style={{ 
-        fontSize: '16px',
-        marginBottom: '1vh',
-        color: '#4B5563',
-      }}>Connected to {address}</div>
-      <div style={{ 
-        fontSize: '20px',
-        marginBottom: '2vh',
-        color: '#1F2937',
-      }}>Total NFTs minted: {nftsminted} / {totalsupply}</div>
-      <div style={{ 
-        fontSize: '18px',
-        marginBottom: '2vh',
-        color: '#4B5563',
-      }}>Minting fee: {mintingfee} ether</div>
-      {(balance > mintingfee) ?
-        <div>
-          <p style={{ 
-            fontSize: '20px',
-            marginBottom: '1vh',
-            color: '#1F2937',
-          }}>To mint an NFT, click the button below.</p>
-          <button style={{
-            height: '40px',
-            width: '150px',
-            backgroundColor: '#4A4A4A',
-            color: 'white',
-            fontSize: '20px',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'block',
-            margin: '0 auto',
-            borderRadius: '10px',
-          }} onClick={() => mint()} disabled={!canmintnft}>{mintnft}</button>
-        </div> :
-        <h3 style={{ 
-          fontSize: '24px',
-          color: '#EF4444',
-          marginTop: '2vh',
-        }}>Insufficient Balance</h3>}
-      <div style={{ 
-        fontSize: '16px',
-        color: '#EF4444',
-      }}>{transactioninfo}</div>
+    return (
+      <div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    border: "2px solid #1F2937",
+    borderRadius: "10px",
+    maxWidth: "90vw",
+    maxHeight: "90vh",
+    width: "auto",
+    height: "auto",
+  
+    padding: "2rem",
+    backgroundColor: "#F9FAFB",
+  }}
+>
+<div style={{ 
+  display: "flex",
+  flexDirection:"column",
+  alignItems: "center",
+  textAlign:"center" }}>
+  <div>
+  <h2
+    style={{
+      fontSize: "24px",
+      fontWeight: "bold",
+      marginBottom: "2vh",
+      color: "#1F2937",
+    }}
+  >
+    MINT NFT
+  </h2>
+  <div
+    style={{
+      fontSize: "16px",
+      marginBottom: "1vh",
+      color: "#4B5563",
+    }}
+  >
+    Connected to {address}
+  </div>
+  <div
+    style={{
+      fontSize: "20px",
+      marginBottom: "2vh",
+      color: "#1F2937",
+    }}
+  >
+    Total NFTs minted: {nftsminted} / {totalsupply}
+  </div>
+  <div
+    style={{
+      fontSize: "18px",
+      marginBottom: "2vh",
+      color: "#4B5563",
+    }}
+  >
+    Minting fee: {mintingfee} ether
+  </div>
+
+    {(balance > mintingfee) ? (
+      <div>
+        <p
+          style={{
+            fontSize: "20px",
+            marginBottom: "1vh",
+            color: "#1F2937",
+          }}
+        >
+          To mint an NFT, click the button below.
+        </p>
+        <button
+          style={{
+            height: "40px",
+            width: "150px",
+            backgroundColor: "#4A4A4A",
+            color: "white",
+            fontSize: "20px",
+            border: "none",
+            cursor: "pointer",
+            display: "block",
+            margin: "0 auto",
+            borderRadius: "10px",
+          }}
+          onClick={() => mint()}
+          disabled={!canmintnft}
+        >
+          {mintnft}
+        </button>
+      </div>
+    ) : (
+      <h3
+        style={{
+          fontSize: "24px",
+          color: "#EF4444",
+          marginTop: "2vh",
+        }}
+      >
+        Insufficient Balance
+      </h3>
+    )}
+     <div
+      style={{
+        fontSize: "16px",
+        color: "#EF4444",
+      }}>
+      {transactioninfo}
     </div>
-  );
+  
+  
+  </div>
+  <img
+      src={image}
+      style={{
+        maxWidth: "50%",
+        height: "auto",
+        width : "auto",
+        borderRadius: "10px",
+      }}
+    />
+    
+  </div>
+ 
+</div>
+    );
 
 }
