@@ -79,7 +79,7 @@ export default  function ContractInteraction() {
     const mint = async () => {
       setCanMint(false)
       setmintnft('Minting')
-      await getImage((await NFT.totalNFTsMinted()).toNumber())
+     
       try {
         
         const transaction = await NFT.mint( signer.getAddress(), overrides);
