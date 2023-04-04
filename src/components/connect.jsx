@@ -14,10 +14,10 @@ export default function Connect() {
       setconnect('Connecting')
       const network = await provider.getNetwork()
       try {
-      if (network.chainId !== 5) {
+      if (network.chainId !== 11155111) {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x5' }], // Goerli chain ID
+            params: [{ chainId: '0xaa36a7' }], 
           });
       }
       const addresses = await window.ethereum.request({ method: 'eth_requestAccounts' })

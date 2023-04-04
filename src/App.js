@@ -8,7 +8,7 @@ import { MyContext } from './components/MyContext';
 
 function App() {
 
-  const [Display, setDisplay] = useState(true);
+  const [Display, setDisplay] = useState();
   const [ myBooleanVariable,setMyBooleanVariable ] = useState(false);
 
   window.ethereum.on('disconnect', (error) => {
@@ -16,12 +16,14 @@ function App() {
  });
 
   window.ethereum.on('chainChanged', async (chainId) => {
-      console.log(chainId)
-      if(chainId==='0x5'){
+      if(chainId==='0xaa36a7'){
         setDisplay(true)
+        console.log(chainId)
       }
-      else 
+      else {
         setDisplay(false)
+        console.log(chainId+"false")
+      }
   });
 
   useEffect(() => {
@@ -29,7 +31,7 @@ function App() {
     if(window.ethereum){
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider.getNetwork().then((network) => {
-        if(network.chainId===5)
+        if(network.chainId===11155111)
         setDisplay(true);
         else
         setDisplay(false);
@@ -52,9 +54,8 @@ function App() {
      });
     }
   },);
-
   return (
-    <MyContext.Provider value={{ myBooleanVariable,setMyBooleanVariable,Display }} >
+    <MyContext.Provider value={{ myBooleanVariable,setMyBooleanVariable,Display}} >
       {myBooleanVariable ? Display ? <ContractInteraction /> : <Changechainid/> : <Connect />}
     </MyContext.Provider>
   );

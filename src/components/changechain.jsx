@@ -4,19 +4,22 @@ import { MyContext } from './MyContext';
 export default function Changechainid() {
     const {setMyBooleanVariable } = useContext(MyContext);
     const [connectioninfo,setconnectioninfo] = useState('')
-
+  
     const  changechainid = (async ()=>{
+      try{
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x5' }], // Goerli chain ID
-        }).catch(async (error) => {
+          params: [{ chainId: '0xaa36a7' }], 
+        })
+      }
+        catch(error){
         if (error.code === 4001) {
           setconnectioninfo('User rejected the request');
         }
         else{
           setconnectioninfo(`Error: ${error.message}`);
         }
-      });
+        }
     });
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);

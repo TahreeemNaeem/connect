@@ -396,5 +396,12 @@
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "widthdraw",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
     }
 ]

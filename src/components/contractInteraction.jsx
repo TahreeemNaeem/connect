@@ -8,7 +8,7 @@ import React, { useState, useEffect,useContext } from 'react';
 export default  function ContractInteraction() {
 
     const [transactioninfo, settransactioninfo] = useState('');
-    const {setMyBooleanVariable } = useContext(MyContext);
+    const {setMyBooleanVariable} = useContext(MyContext);
     const [address, setAddress] = useState(null);
     const [balance, setBlance] = useState('');
     const [mintingfee, setMintingfee] = useState('');
@@ -20,7 +20,7 @@ export default  function ContractInteraction() {
     const provider= (new ethers.providers.Web3Provider(window.ethereum));
     const signer = provider.getSigner()
 
-    const NFT =  new ethers.Contract('0x2fd1E0aBBb24d81d7E042EEAFd696f42a313A19e', ABI, (provider.getSigner()));
+    const NFT =  new ethers.Contract('0xCAABe944c61b93F4124bdBf8e2135c901576d3Ed', ABI, (provider.getSigner()));
     
     window.ethereum.on('accountsChanged', handleAccountsChanged);
     function  handleAccountsChanged(accounts) {
@@ -60,10 +60,9 @@ export default  function ContractInteraction() {
 
 
     async function  getImage(id) {
-      const URI =  await NFT.tokenURI(id);
-      const url= (URI+'.json');
-      console.log(url)
-      fetch(url)
+      const URL =  await NFT.tokenURI(id);
+      console.log(URL)
+      fetch(URL)
       .then(res => res.json())
          .then(metadata =>{
               setImage(metadata.image);
@@ -82,12 +81,10 @@ export default  function ContractInteraction() {
      
       try {
         
-        const transaction = await NFT.mint( signer.getAddress(), overrides);
-      
+        const transaction = await NFT.mint( signer.getAddress(), overrides)
         await transaction.wait();
         await getImage((await NFT.totalNFTsMinted()).toNumber())
         setnftsminted((await NFT.totalNFTsMinted()).toNumber());
-       
         settransactioninfo('Successfully Minted');
         setmintnft('Mint NFT')
         setCanMint(true)
