@@ -88,11 +88,8 @@ export default  function ContractInteraction() {
         
         const transaction = await NFT.mint( signer.getAddress(), overrides)
         const receipt = await transaction.wait();
-
-        const blockNumber = receipt.blockNumber;
-        const filter = NFT.filters.Transfer(null, null, null);
-        const events = await NFT.queryFilter(filter, blockNumber);
-        const tokenid =(events[0].args.tokenId).toNumber();
+        const event = receipt.events;
+        const tokenid = (event[0].args.tokenId).toNumber();
 
         await getImage(tokenid)
 
