@@ -17,6 +17,7 @@ export default  function ContractInteraction() {
     const [canmintnft,setCanMint] = useState(true)
     const [mintnft,setmintnft] = useState('Mint NFT')
     const [image,setImage]= useState('')
+    const [text,setText]= useState('')
     const provider= (new ethers.providers.Web3Provider(window.ethereum));
     const signer = provider.getSigner()
 
@@ -63,8 +64,15 @@ export default  function ContractInteraction() {
       const URL =  await NFT.tokenURI(id);
       fetch(URL)
       .then(res => res.json())
-         .then(metadata =>{
-              setImage(metadata.image);})
+         .then(async metadata =>{
+          const img =metadata.image
+              setImage(img);
+              setnftsminted((await NFT.totalNFTsMinted()).toNumber());
+              settransactioninfo('Successfully Minted');
+              setmintnft('Mint NFT')
+              setCanMint(true)
+              setText("New Minted NFt")
+            })
            .catch(err => { throw err });
           
         }
@@ -73,8 +81,9 @@ export default  function ContractInteraction() {
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
       setCanMint(false)
+      setImage('')
       setmintnft('Minting')
-     
+      setText("loading new NFT")
       try {
         
         const transaction = await NFT.mint( signer.getAddress(), overrides)
@@ -87,22 +96,19 @@ export default  function ContractInteraction() {
 
         await getImage(tokenid)
 
-        setnftsminted((await NFT.totalNFTsMinted()).toNumber());
-        settransactioninfo('Successfully Minted');
-        setmintnft('Mint NFT')
-        setCanMint(true)
-
       } catch (error) {
         console.error(error);
         if (error.code === 'ACTION_REJECTED') {
           settransactioninfo('User Denied Transaction');
           setmintnft('Mint NFT');
           setCanMint(true)
+          setText("")
         }
         else {
           settransactioninfo(`Error: ${error.message}`);
           setmintnft('Mint NFT')
           setCanMint(true)
+          setText("")
         }
       }
     };
@@ -232,7 +238,7 @@ export default  function ContractInteraction() {
         borderRadius: "10px",
       }}
     />
-    
+    <div>{text}</div>
   </div>
  
 </div>
