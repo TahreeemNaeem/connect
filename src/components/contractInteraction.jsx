@@ -61,19 +61,15 @@ export default  function ContractInteraction() {
 
     async function  getImage(id) {
       const URL =  await NFT.tokenURI(id);
-      console.log(URL)
       fetch(URL)
       .then(res => res.json())
          .then(metadata =>{
-              setImage(metadata.image);
-              console.log(metadata.image)})
+              setImage(metadata.image);})
            .catch(err => { throw err });
           
         }
+     
 
-      
-  
-   
     const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
       setCanMint(false)
@@ -82,12 +78,20 @@ export default  function ContractInteraction() {
       try {
         
         const transaction = await NFT.mint( signer.getAddress(), overrides)
-        await transaction.wait();
-        await getImage((await NFT.totalNFTsMinted()).toNumber())
+        const receipt = await transaction.wait();
+
+        const blockNumber = receipt.blockNumber;
+        const filter = NFT.filters.Transfer(null, null, null);
+        const events = await NFT.queryFilter(filter, blockNumber);
+        const tokenid =(events[0].args.tokenId).toNumber();
+
+        await getImage(tokenid)
+
         setnftsminted((await NFT.totalNFTsMinted()).toNumber());
         settransactioninfo('Successfully Minted');
         setmintnft('Mint NFT')
         setCanMint(true)
+
       } catch (error) {
         console.error(error);
         if (error.code === 'ACTION_REJECTED') {
