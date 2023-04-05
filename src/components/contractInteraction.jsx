@@ -16,12 +16,15 @@ export default  function ContractInteraction() {
     const [nftsminted, setnftsminted] = useState('');
     const [canmintnft,setCanMint] = useState(true)
     const [mintnft,setmintnft] = useState('Mint NFT')
-    const [image,setImage]= useState('')
+    const [tokenids,setTokenIds]= useState([])
+    const [images,setImages]= useState([])
     const [text,setText]= useState('')
+    const [inputValue, setInputValue] = useState(1);
+
     const provider= (new ethers.providers.Web3Provider(window.ethereum));
     const signer = provider.getSigner()
 
-    const NFT =  new ethers.Contract('0xCAABe944c61b93F4124bdBf8e2135c901576d3Ed', ABI, (provider.getSigner()));
+    const NFT =  new ethers.Contract('0x7465278896C47292301045d6bE4298794204594C', ABI, (provider.getSigner()));
     
     window.ethereum.on('accountsChanged', handleAccountsChanged);
     function  handleAccountsChanged(accounts) {
@@ -61,37 +64,49 @@ export default  function ContractInteraction() {
 
 
     async function  getImage(id) {
-      const URL =  await NFT.tokenURI(id);
+      for(let i=0;i<id.length;i++){
+      const URL =  await NFT.tokenURI(id[i]);
       fetch(URL)
       .then(res => res.json())
          .then(async metadata =>{
           const img =metadata.image
-              setImage(img);
-              setnftsminted((await NFT.totalNFTsMinted()).toNumber());
-              settransactioninfo('Successfully Minted');
-              setmintnft('Mint NFT')
-              setCanMint(true)
-              setText("New Minted NFt")
+              setImages(arr => [...arr, img]);
+              console.log(img)
             })
            .catch(err => { throw err });
-          
-        }
-     
+          }
+      }
+    const handleChange = (event) => {
+      setInputValue(event.target.value);
+     };
 
-    const overrides = {value: ethers.utils.parseEther('0.000000000000000001')}
     const mint = async () => {
+      const amount = 0.000000000000000001;
+      const net = (amount*inputValue).toFixed(18);
+      console.log(net)
+      const overrides = {value: ethers.utils.parseEther(net.toString())}
       setCanMint(false)
-      setImage('')
       setmintnft('Minting')
       setText("loading new NFT")
       try {
         
-        const transaction = await NFT.mint( signer.getAddress(), overrides)
+        const transaction = await NFT.mintBatch( signer.getAddress(),inputValue, overrides)
         const receipt = await transaction.wait();
-        const event = receipt.events;
-        const tokenid = (event[0].args.tokenId).toNumber();
 
-        await getImage(tokenid)
+        const event = receipt.events;
+        const ids = ((event[0].args.ids));
+        console.log(ids)
+        let tokenids=[];
+        for (let i = 0; i < ids.length; i++) {
+          tokenids[i]=ids[i].toNumber()
+        }
+        console.log(tokenids)
+        await getImage(tokenids)
+        setnftsminted((await NFT.totalNFTsMinted()).toNumber());
+        settransactioninfo('Successfully Minted');
+        setmintnft('Mint NFT')
+        setCanMint(true)
+        setText("New Minted NFt")
 
       } catch (error) {
         console.error(error);
@@ -126,16 +141,15 @@ export default  function ContractInteraction() {
     maxHeight: "90vh",
     width: "auto",
     height: "auto",
-  
     padding: "2rem",
     backgroundColor: "#F9FAFB",
   }}
 >
 <div style={{ 
-  display: "flex",
-  flexDirection:"column",
-  alignItems: "center",
-  textAlign:"center" }}>
+   display: "flex",
+   flexDirection: "column",
+   alignItems: "center",
+   textAlign: "center", }}>
   <div>
   <h2
     style={{
@@ -184,8 +198,49 @@ export default  function ContractInteraction() {
             color: "#1F2937",
           }}
         >
-          To mint an NFT, click the button below.
+          To mint NFTs, click the button below.
         </p>
+  
+        <div style={{
+            display: "flex",
+            margin: "0 auto",
+            border: "2px solid gray",
+            borderRadius: "5px",
+            backgroundColor: "#fff",
+            width: "fit-content",
+            height: "2.5rem",
+        }}>
+              <button
+                style={styles.arrowBtn}
+                disabled={!canmintnft}
+                onClick={() => setInputValue((prev) => prev + 1)}
+              >
+                &#x25B2;
+              </button>
+              <input
+                type="number"
+                value={inputValue}
+                onChange={handleChange}
+                disabled={!canmintnft}
+                style={{
+                  fontSize: "1.2rem",
+                  padding: "0.5rem",
+                  textAlign: "center",
+                  width: "3rem",
+                }}
+              />
+              <button
+                style={styles.arrowBtn}
+                disabled={!canmintnft}
+                onClick={() =>
+                  setInputValue((prev) => (prev > 1 ? prev - 1 : 1))
+                }
+              >
+               &#x25BC;
+              </button>
+            </div>
+ 
+
         <button
           style={{
             height: "40px",
@@ -226,15 +281,27 @@ export default  function ContractInteraction() {
   
   
   </div>
-  <img
-      src={image}
+  <div
       style={{
-        maxWidth: "50%",
-        height: "auto",
-        width : "auto",
-        borderRadius: "10px",
+        display: "flex",
+        overflowX: "auto",
+        maxWidth: "100%",
+        marginTop: "20px",
       }}
-    />
+    >
+      {images.map((image, index) => (
+        <img
+          key={index}
+          src={image}
+          alt={`image ${index + 1}`}
+          style={{
+            maxWidth: "50%",
+            height: "auto",
+            width : "auto",
+            borderRadius: "10px", }}
+        />
+      ))}
+    </div>
     <div>{text}</div>
   </div>
  
@@ -242,3 +309,14 @@ export default  function ContractInteraction() {
     );
 
 }
+const styles = {
+  arrowBtn: {
+    color: "gray",
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    cursor: "pointer",
+    padding: "0 0.5rem",
+    outline: "none",
+  },
+ 
+};
